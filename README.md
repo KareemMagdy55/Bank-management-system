@@ -1,9 +1,9 @@
 # Bank Management System
 
-The Bank Management System is a software application designed to manage multiple banks, their branches, customers, loans, and accounts. It provides functionalities for signing up new users, updating user details, adding banks and branches, managing customers, and performing operations on loans.
+The Bank Management System is a simple software application designed to manage multiple banks, their branches, customers, loans, and accounts. It provides functionalities for signing up new users, updating user details, adding banks and branches, managing customers, and performing operations on loans.
 
 ## Introduction
-The Bank Management System is a comprehensive solution for efficiently managing the operations of banks and their branches. It allows administrators, employees, and customers to interact with a centralized system to perform various tasks related to customers, accounts, and loans.
+The Bank Management System is a comprehensive solution for efficiently managing the operations of simple banks' systems and their branches. It allows administrators, employees, and customers to interact with a centralized system to perform various tasks related to customers, accounts, and loans.
 
 ## Functionality
 The Bank Management System offers the following functionalities:
