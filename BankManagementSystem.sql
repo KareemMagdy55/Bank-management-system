@@ -42,7 +42,7 @@ CREATE TABLE Employee (
 	Name varchar(15),
 	SSN varchar(10),
 	Password varchar(15),
-	AccessLevel varchar(10),
+	AccessLevel int,
 	BankCode varchar(10), 
 	BranchCode varchar(10),
 
@@ -67,7 +67,7 @@ CREATE TABLE Account (
 
 CREATE TABLE Loan (
 	Type varchar(15),
-	Number varchar(15),
+	Number int,
 	Balance float,
 	Status varchar(15),
 	EmployeeSSN varchar(10), 
