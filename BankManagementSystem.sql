@@ -51,6 +51,14 @@ CREATE TABLE Employee (
 	CONSTRAINT Employee_pk PRIMARY KEY (SSN)
 );
 
+CREATE TABLE Admin (
+	Name varchar(15),
+	SSN varchar(10),
+	Password varchar(15),
+	
+	CONSTRAINT Admin_PK PRIMARY KEY (SSN)
+	);
+	
 CREATE TABLE Account (
 	 AccountType varchar(15),
 	 Number varchar(17),
