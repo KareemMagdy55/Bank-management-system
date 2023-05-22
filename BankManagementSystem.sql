@@ -29,10 +29,12 @@ CREATE TABLE Customer (
 	Password varchar(15) NOT NULL, 
 	BankCode varchar(10), 
 	BranchCode varchar(10),
+	AccountNumber varchar(17),
   
 	CONSTRAINT Customer_pk PRIMARY KEY (SSN),
 	CONSTRAINT CustomerBranch_fk foreign key (BranchCode) references Branch(Number), 
-	CONSTRAINT CustomerBank_fk foreign key (BankCode) references Bank(Code), 
+	CONSTRAINT CustomerBank_fk foreign key (BankCode) references Bank(Code),
+	CONSTRAINT CustomerAccNum_fk foreign key (AccountNumber) references Account(Number), 
 	CONSTRAINT Customer_uq Unique (Phone)
 );
 
@@ -56,7 +58,7 @@ CREATE TABLE Account (
 	 CustomerSSN varchar(10), 
 	 EmployeeID varchar(10), 
 
-	 CONSTRAINT AccountCustomer_FK Foreign KEY (CustomerSSN) references Customer (SSN), 
+	 CONSTRAINT AccountCustomer_FK Foreign KEY (CustomerSSN) references Customer(SSN), 
 	 CONSTRAINT AccountEmp_FK Foreign KEY (EmployeeID) references Employee(SSN),
 	 CONSTRAINT Account_pk PRIMARY KEY (Number)
 );
