@@ -1,77 +1,104 @@
 use master
-Drop database BankManagementSystem
+DROP DATABASE IF EXISTS BankManagementSystem;
 CREATE DATABASE BankManagementSystem
- 
-CREATE TABLE Bank (
-	BankName varchar(15),
-	Code varchar(10),
-	BankAddress varchar(50),
 
-	CONSTRAINT Bank_pk PRIMARY KEY (Code),
-	CONSTRAINT Bank_uq Unique (BankName)
+CREATE TABLE Bank (
+    Name varchar(15),
+    Code varchar(10),
+    Address varchar(50),
+
+    CONSTRAINT Bank_pk PRIMARY KEY (Code),
+    CONSTRAINT Bank_uq UNIQUE (Name)
 );
 
 CREATE TABLE Branch (
-	BranchNumber varchar(10),
-	BranchAddress varchar(50),
-	BankCode varchar(10) , 
+    Number varchar(10),
+    Address varchar(50),
+    BankCode varchar(10),
 
-	CONSTRAINT Branch_pk PRIMARY KEY (BranchNumber),
-	constraint Branch_fk foreign key (BankCode) references Bank(Code)
-
-);
-
-CREATE TABLE Customer (
-	CustomerName varchar(100) NOT NULL,
-	SSN varchar(10),
-	CustomerAddress varchar(50),
-	Phone varchar(12),
-	CustomerPassword varchar(15) NOT NULL, 
-	BankCode varchar(10), 
-	BranchCode varchar(10),
-  
-	CONSTRAINT Customer_pk PRIMARY KEY (SSN
-	                                   ),
-	constraint CustomerBranch_fk foreign key (BranchCode) references Branch(BranchNumber), 
-	constraint CustomerBank_fk foreign key (BankCode) references Bank(Code), 
-	CONSTRAINT Customer_uq Unique (Phone)
+    CONSTRAINT Branch_pk PRIMARY KEY (Number),
+    CONSTRAINT Branch_fk FOREIGN KEY (BankCode) REFERENCES Bank(Code)
 );
 
 CREATE TABLE Employee (
-	EmployeeName varchar(15),
-	SSN varchar(10),
-	EmployeePassword varchar(15),
-	AccessLevel varchar(10),
-	BankCode varchar(10), 
-	BranchCode varchar(10),
+    Name varchar(15),
+    SSN varchar(10),
+    Password varchar(15),
+    AccessLevel int,
+    BankCode varchar(10),
+    BranchCode varchar(10),
 
-	constraint EmployeeBranch_fk foreign key (BranchCode) references Branch(BranchNumber), 
-	constraint EmployeeBank_fk foreign key (BankCode) references Bank(Code), 
-	CONSTRAINT Employee_pk PRIMARY KEY (SSN)
+    CONSTRAINT EmployeeBranch_fk FOREIGN KEY (BranchCode) REFERENCES Branch(Number),
+    CONSTRAINT EmployeeBank_fk FOREIGN KEY (BankCode) REFERENCES Bank(Code),
+    CONSTRAINT Employee_pk PRIMARY KEY (SSN)
+);
+
+CREATE TABLE Admin (
+    Name varchar(15),
+    SSN varchar(10),
+    Password varchar(15),
+
+    CONSTRAINT Admin_PK PRIMARY KEY (SSN)
+);
+
+CREATE TABLE Customer (
+    Name varchar(100) NOT NULL,
+    SSN varchar(10),
+    Address varchar(50),
+    Phone varchar(12),
+    Password varchar(15) NOT NULL,
+    BankCode varchar(10),
+    BranchCode varchar(10),
+    AccountNumber varchar(17),
+
+    CONSTRAINT Customer_pk PRIMARY KEY (SSN),
+    CONSTRAINT CustomerBranch_fk FOREIGN KEY (BranchCode) REFERENCES Branch(Number),
+    CONSTRAINT CustomerBank_fk FOREIGN KEY (BankCode) REFERENCES Bank(Code),
+    CONSTRAINT Customer_uq UNIQUE (Phone)
 );
 
 CREATE TABLE Account (
-	 AccountType varchar(15),
-	 Number varchar(17),
-	 Balance float,
-	 CustomerSSN varchar(10), 
-	 EmployeeID varchar(10), 
+    AccountType varchar(15),
+    Number varchar(17),
+    Balance float,
+    CustomerSSN varchar(10),
+    EmployeeID varchar(10),
 
-	 Constraint AccountCustomer_FK foreign key (CustomerSSN) references Customer (SSN), 
-	 Constraint AccountEmp_FK foreign key (EmployeeID) references Employee(SSN) ,
-	 CONSTRAINT Account_pk PRIMARY KEY (Number),
+    CONSTRAINT Account_pk PRIMARY KEY (Number),
+    CONSTRAINT AccountCustomer_FK FOREIGN KEY (CustomerSSN) REFERENCES Customer(SSN),
+    CONSTRAINT AccountEmp_FK FOREIGN KEY (EmployeeID) REFERENCES Employee(SSN)
 );
 
-
+
 CREATE TABLE Loan (
-	LoanType varchar(15),
- Number int IDENTITY(1,1), --<
-	Balance float,
-	LoanStatus varchar(15),
-	EmployeeSSN varchar(10) NULL, --<
-	CustomerSSN varchar(10),
+    Type varchar(15),
+    Number int,
+    Balance float,
+    Status varchar(15),
+    EmployeeSSN varchar(10),
+    CustomerSSN varchar(10),
 
- CONSTRAINT Loan_pk PRIMARY KEY (Number),
-	Constraint LoanEmp_FK foreign key (EmployeeSSN) references Employee(SSN),
-Constraint LoanCustomer_FK foreign key (CustomerSSN) references Customer (SSN)
+    CONSTRAINT LoanEmp_FK FOREIGN KEY (EmployeeSSN) REFERENCES Employee(SSN),
+    CONSTRAINT LoanCustomer_FK FOREIGN KEY (CustomerSSN) REFERENCES Customer (SSN),
+    CONSTRAINT Loan_pk PRIMARY KEY (Number)
 );
+
+ALTER TABLE Loan
+DROP LoanType;
+
+ALTER TABLE Loan
+ADD PaidBalance float;
+
+ALTER TABLE Loan
+ADD CONSTRAINT LoanID_pk PRIMARY KEY (ID);
+
+CREATE TABLE LoanType (
+	LoanTypeID int,
+	LoanType varchar(15)
+);
+
+ALTER TABLE Loan
+ADD LoanTypeID int;
+
+ALTER TABLE Loan
+ADD FOREIGN KEY (LoanTypeID) REFERENCES LoanType(LoanTypeID);
