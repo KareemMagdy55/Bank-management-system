@@ -48,3 +48,6 @@ JOIN LoanType ON Loan.LoanTypeID = LoanType.LoanTypeID;''')
         self.db.sendQuery("SELECT * FROM dbo.Customer;")
 
 
+emp = Employee
+
+

@@ -56,9 +56,9 @@ class Admin(BankUser):
         params = (accountType, accountNumber, balance, customerSSN, employeeID)
         self.db.sendQueryParams(query, params)
 
-    def addLoan(self, loanType, loanNumber, balance, loanStatus, employeeSSN, customerSSN):
-        query = "INSERT INTO Loan (LoanType, Number, Balance, LoanStatus, EmployeeSSN, CustomerSSN) VALUES (?, ?, ?, ?, ?, ?);"
-        params = (loanType, loanNumber, balance, loanStatus, employeeSSN, customerSSN)
+    def addLoan(self, loanType, balance, loanStatus, employeeSSN, customerSSN):
+        query = "INSERT INTO Loan (LoanType, Balance, LoanStatus, EmployeeSSN, CustomerSSN) VALUES (?, ?, ?, ?, ?, ?);"
+        params = (loanType, balance, loanStatus, employeeSSN, customerSSN)
         self.db.sendQueryParams(query, params)
 
     def updateCustomer(self, ossn, cname, ssn, address, phone, password, bankCode, branchCode):
