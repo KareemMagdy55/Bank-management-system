@@ -24,6 +24,7 @@ class Admin(BankUser):
         params = (cname, ssn, address, phone, password, bankCode, branchCode)
         self.db.sendQueryParams(query, params)
 
+
     def signUpEmployee(self, ename, ssn, password, accssLvl, bankCode, branchCode):
         query = "INSERT INTO Employee (EmployeeName, SSN, EmployeePassword, AccessLevel, BankCode, BranchCode) VALUES (?, ?, ?, ?, ?, ?);"
         params = (ename, ssn, password, accssLvl, bankCode, branchCode)
@@ -38,6 +39,16 @@ class Admin(BankUser):
     def addBranch(self, branchNum, branchAddress, bankCode):
         query = "INSERT INTO Branch (BranchNumber, BranchAddress, BankCode) VALUES (?, ?, ?);"
         params = (branchNum, branchAddress, bankCode)
+        self.db.sendQueryParams(query, params)
+
+    def deleteBank(self, bankCode):
+        query = "DELETE FROM Bank WHERE Code = ?;"
+        params = (bankCode,)
+        self.db.sendQueryParams(query, params)
+
+    def deleteBranch(self, branchNum, bankCode):
+        query = "DELETE FROM Branch WHERE BranchNumber = ? AND BankCode = ?;"
+        params = (branchNum, bankCode)
         self.db.sendQueryParams(query, params)
 
     def addAccount(self, accountType, accountNumber, balance, customerSSN, employeeID):
@@ -66,7 +77,10 @@ class Admin(BankUser):
         self.db.sendQueryParams(query, params)
 
     def showLoansDetails(self):
-        self.db.sendQuery("SELECT * FROM dbo.Loan;")
+        self.db.sendQuery('''SELECT DISTINCT Employee.EmployeeName AS EmployeeName, Customer.CustomerName AS CustomerName, Loan.*
+FROM Employee
+JOIN Loan ON Employee.SSN = Loan.EmployeeSSN
+JOIN Customer ON Loan.CustomerSSN = Customer.SSN;''')
 
     def showLoansType(self):
         self.db.sendQuery("SELECT LoanType FROM dbo.LoanType;")
