@@ -90,15 +90,15 @@ ALTER TABLE Loan
 ADD PaidBalance float;
 
 ALTER TABLE Loan
+ADD LoanTypeID int;
+
+ALTER TABLE Loan
 ADD CONSTRAINT LoanID_pk PRIMARY KEY (ID);
 
 CREATE TABLE LoanType (
 	LoanTypeID int,
 	LoanType varchar(15)
 );
-
-ALTER TABLE Loan
-ADD LoanTypeID int;
 
 ALTER TABLE Loan
 ADD FOREIGN KEY (LoanTypeID) REFERENCES LoanType(LoanTypeID);
