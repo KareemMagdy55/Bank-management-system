@@ -13,7 +13,7 @@
 	IF EXISTS (
 	    SELECT 1
 	    FROM Employee
-	    WHERE SSN = 'SSN' AND EmployeePassword = 'passwd' 
+	    WHERE SSN = 'SSN' AND Password = 'passwd' 
 	)
 	BEGIN PRINT '1'; END
 	ELSE
@@ -23,7 +23,7 @@
 	IF EXISTS (
 	    SELECT 1
 	    FROM Customer
-	    WHERE SSN = 'SSN' AND CustomerPassword = 'passwd' 
+	    WHERE SSN = 'SSN' AND Password = 'passwd' 
 	)
 	BEGIN PRINT '1'; END
 	ELSE
@@ -33,7 +33,7 @@
 -- 1. Signing up a new user (customer, employee):
 	-- customer
 	INSERT INTO Customer
-	VALUES ('Name', 'SSN', 'Address', 'Phone', 'Password', 'BankCode', 'BranchCode');
+	VALUES ('Name', 'SSN', 'Address', 'Phone', 'Password', 'BankCode', 'BranchCode', 'accountnum');
 	-- employee
 	INSERT INTO Employee
 	VALUES ('Name', 'SSN', 'Password', 'AccessLevel', 'BankCode', 'BranchCode');
@@ -41,60 +41,61 @@
 -- 2. Updating a user's details
 	-- customer
 	UPDATE Customer
-	SET CustomerName = 'Name', CustomerAddress = 'Address', Phone = 'phone', CustomerPassword = 'Password'
+	SET Name = 'Name', Address = 'Address', Phone = 'phone', Password = 'Password'
 	WHERE SSN = 'SSN';
 	-- employee
 	UPDATE Employee
-	SET EmployeeName = 'Name', EmployeePassword='Password', Accesslevel='al'
+	SET Name = 'Name', Password='Password', Accesslevel='al'
 	WHERE SSN = 'SSN';
 
 -- 3. Add bank (by admin)
-INSERT INTO Bank ()
+INSERT INTO Bank
 VALUES ('BankName', 'Code', 'BankAddress');
 
 -- 4. Add bank branch (by Admin)
-INSERT INTO Branch ()
+
+INSERT INTO Branch
 VALUES ('BranchNumber', 'BankCode', 'BranchAddress');
 
 -- 5. Add a customer (by employee)
 INSERT INTO Customer
-VALUES ('Name', 'SSN', 'Address', 'Phone', 'Password', 'BankCode', 'BranchCode');
+VALUES ('Name', 'SSN', 'Address', 'Phone', 'Password', 'BankCode', 'BranchCode', 'accountnum');
 
 -- 6. Showing a list of loan
-SELECT LoanType FROM Loan;
+SELECT Type FROM Loan;
 
 -- 7. Showing a list of customers
-SELECT C.CustomerName, C.SSN, C.CustomerAddress, C.Phone, C.BankCode, C.BranchCode FROM Customer C;
+SELECT Name, SSN, Address, Phone, BankCode, BranchCode AccountNumber FROM Customer;
 
 -- 8. Showing a list of loans with customer name and employee name
-SELECT L.LoanType, L.Number ,L.LoanStatus, L.Balance, C.CustomerName , E.EmployeeName
+SELECT L.Type, L.Number ,L.Status, L.Balance, C.Name AS 'Customer Name', E.Name AS 'Employee Name'
 FROM Loan L
-JOIN Customer C ON L.CustomerSSN = C.SSN
+JOIN Customer C ON L.EmployeeSSN = C.SSN
 JOIN Employee E ON L.EmployeeSSN = E.SSN;
 
 -- 9. Performing operations on loans: request and start operation (by customer)
 	-- Request a loan
-	INSERT INTO Loan (LoanType, Balance, LoanStatus, EmployeeSSN, CustomerSSN)
+	INSERT INTO Loan (Type, Balance, Status, EmployeeSSN, CustomerSSN)
 	VALUES
-		('Type', 'Balance', 'Requested', NULL, 'SSN')
+		('Type', 20000, 'Requested', NULL, 'SSN')
 		
 	-- Start the loan operation
 	UPDATE Loan
-	SET LoanStatus = 'Start'
+	SET Status = 'Start'
 	WHERE CustomerSSN = 'SSN'
 
 -- 10. Performing operations on loans: accept, reject and pay loan (by employee)
 	-- Accept a loan
 	UPDATE Loan
-	SET LoanStatus= 'Accepted', EmployeeSSN = 'SSN'
+	SET Status= 'Accepted', EmployeeSSN = 'SSN'
 	WHERE Number = 'Number';
 
 	-- Reject a loan
 	UPDATE Loan
-	SET LoanStatus = 'Rejected'
+	SET Status = 'Rejected'
 	WHERE Number = 'Number';
 
 	-- Pay loan
 	UPDATE Loan
-	SET LoanStatus = 'Paid'
+	SET Status = 'Paid'
 	WHERE Number = 'Number';
