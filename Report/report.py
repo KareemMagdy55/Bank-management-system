@@ -1,6 +1,8 @@
+import tkinter as tk
 from DBMS.handleDB import DB
 
 db = DB()
+
 
 
 def get_table_counts():
@@ -69,21 +71,19 @@ def get_average_loan_balance():
 
 
 def get_bank_with_min_loan_balance():
-    db.cursor.execute('SELECT BankName, MIN(Balance) AS MinBalance FROM Loan, Bank '
-                      'WHERE Loan.BankCode = Bank.Code GROUP BY BankName')
+    db.cursor.execute('SELECT BankName, MIN(Balance) AS MinBalance FROM Loan, Bank GROUP BY BankName;')
     result = db.cursor.fetchone()
     bank_name = result[0]
     min_balance = result[1]
-    return f"The bank with the minimum loans balance: {bank_name} with a balance of {min_balance}"
-
+    return f"The bank with the minimum loan balance: {bank_name} with a balance of {min_balance}"
 
 def get_bank_with_max_loan_balance():
-    db.cursor.execute('SELECT BankName, MAX(Balance) AS MaxBalance FROM Loan, Bank '
-                      'WHERE Loan.BankCode = Bank.Code GROUP BY BankName')
+    db.cursor.execute('SELECT BankName, MAX(Balance) AS MaxBalance FROM Loan, Bank GROUP BY BankName;')
     result = db.cursor.fetchone()
     bank_name = result[0]
     max_balance = result[1]
-    return f"The bank with the maximum loans balance: {bank_name} with a balance of {max_balance}"
+    return f"The bank with the maximum loan balance: {bank_name} with a balance of {max_balance}"
+
 
 
 def get_bank_with_highest_employees():
@@ -116,3 +116,69 @@ def get_banks_total_loans():
     return (f"Total loans balance of all banks is: {totalLoans}")
 
 
+
+
+# Create a tkinter window
+window = tk.Tk()
+
+# Create a text widget to display the reports
+report_text = tk.Text(window)
+report_text.pack()
+
+
+# Define a function to display the reports
+def display_reports():
+    report_text.delete('1.0', tk.END)  # Clear the text widget
+
+    # Get table counts
+    table_counts = get_table_counts()
+    for count in table_counts.values():
+        report_text.insert(tk.END, count + '\n\n')
+
+    # Get the most used loan type
+    most_used_loan_type = get_most_used_loan_type()
+    report_text.insert(tk.END, most_used_loan_type + '\n\n')
+
+    # Get the bank with the most customers
+    bank_with_most_customers = get_bank_with_most_customers()
+    report_text.insert(tk.END, bank_with_most_customers + '\n\n')
+
+    # Get the bank with the least customers
+    bank_with_least_customers = get_bank_with_least_customers()
+    report_text.insert(tk.END, bank_with_least_customers + '\n\n')
+
+    # Get account types counts
+    account_types_counts = get_account_types_counts()
+    for count in account_types_counts:
+        report_text.insert(tk.END, count + '\n\n')
+
+    # Get the average loan balance
+    average_loan_balance = get_average_loan_balance()
+    report_text.insert(tk.END, average_loan_balance + '\n\n')
+
+    # Get the bank with the minimum loan balance
+    bank_with_min_loan_balance = get_bank_with_min_loan_balance()
+    report_text.insert(tk.END, bank_with_min_loan_balance + '\n\n')
+
+    # Get the bank with the maximum loan balance
+    bank_with_max_loan_balance = get_bank_with_max_loan_balance()
+    report_text.insert(tk.END, bank_with_max_loan_balance + '\n\n')
+
+    # Get the bank with the highest number of employees
+    bank_with_highest_employees = get_bank_with_highest_employees()
+    report_text.insert(tk.END, bank_with_highest_employees + '\n\n')
+
+    # Get the bank with the lowest number of employees
+    bank_with_lowest_employees = get_bank_with_lowest_employees()
+    report_text.insert(tk.END, bank_with_lowest_employees + '\n\n')
+
+    # Get the total loans balance of all banks
+    banks_total_loans = get_banks_total_loans()
+    report_text.insert(tk.END, banks_total_loans + '\n\n')
+
+
+report_button = tk.Button(window, text="Generate Reports", command=display_reports)
+report_button.pack()
+
+# Start the tkinter event loop
+window.mainloop()
