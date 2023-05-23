@@ -2,19 +2,20 @@ from Views.BankUser import *
 
 
 class Employee(BankUser):
-    def __init__(self, name, ssn, password, bankCode, branchCode):
-        super().__init__(name, ssn, password, bankCode)
-        self.branchCode = branchCode
+    def __init__(self, name, ssn, password):
+        super().__init__(name, ssn, password, bankCode= "NONE")
         self.db = DB()
-        self.validateEmployee()
 
     def validateEmployee(self):
         c = self.db.cursor
-        query = "SELECT * FROM Employee WHERE EmployeeName=? AND SSN=? AND EmployeePassword=? AND BankCode =? AND BranchCode = ? AND AccessLevel = '1';"
-        c.execute(query, (self.name, self.ssn, self.password, self.bankCode, self.branchCode))
+        query = "SELECT * FROM Employee WHERE SSN=? AND EmployeePassword=? AND AccessLevel = '1';"
+        c.execute(query, (self.ssn, self.password))
         row = c.fetchone()
         if row is not None:
             print("Employee Found")
+            self.name = row[0]
+            self.bankCode = row[4]
+            self.branchCode = row[5]
         else:
             print("Employee not found !")
 
