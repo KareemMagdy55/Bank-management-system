@@ -90,7 +90,7 @@ ALTER TABLE Loan
 ADD PaidBalance float;
 
 ALTER TABLE Loan
-ADD LoanTypeID int;
+ADD ID int;
 
 ALTER TABLE Loan
 ADD CONSTRAINT LoanID_pk PRIMARY KEY (ID);
