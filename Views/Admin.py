@@ -72,7 +72,7 @@ class Admin(BankUser):
         self.db.sendQueryParams(query, params)
 
     def updateLoan(self, loanNumber, loanStatus):
-        query = " UPDATE Loan SET LoanStatus = ?, EmployeeSSN = ?where LoanType = ?;"
+        query = " UPDATE Loan SET LoanStatus = ?, EmployeeSSN = ? where LoanType = ?;"
         params = (loanStatus, self.ssn, loanNumber)
         self.db.sendQueryParams(query, params)
 
