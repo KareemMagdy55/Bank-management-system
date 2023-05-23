@@ -22,7 +22,7 @@ def mainPage(root):
    
 
 root = tk.CTk()
-root.geometry("750x500")
+root.geometry("1000x600")
 root.title("Banking System")
 mainPage(root)
 root.mainloop() 
