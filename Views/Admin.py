@@ -5,17 +5,19 @@ class Admin(BankUser):
     def __init__(self, name, ssn, password):
         super().__init__(name, ssn, password, bankCode=None)
         self.db = DB()
-        self.validateAdmin()
 
     def validateAdmin(self):
         c = self.db.cursor
-        query = "SELECT * FROM Admin WHERE AdminName=? AND AdminSSN=? AND AdminPassword=?;"
-        c.execute(query, (self.name, self.ssn, self.password))
+        query = "SELECT * FROM Admin WHERE AdminSSN=? AND AdminPassword=?;"
+        c.execute(query, (self.ssn, self.password))
         row = c.fetchone()
         if row is not None:
             print("Admin Found")
+            self.name = row[0]
+            return True
         else:
             print("Admin not found !")
+            return False
 
     def signUpCustomer(self, cname, ssn, address, phone, password, bankCode, branchCode):
         query = "INSERT INTO Customer (CustomerName, SSN, CustomerAddress, Phone, CustomerPassword, BankCode, BranchCode) VALUES (?, ?, ?, ?, ?, ?, ?);"
@@ -27,6 +29,7 @@ class Admin(BankUser):
         query = "INSERT INTO Employee (EmployeeName, SSN, EmployeePassword, AccessLevel, BankCode, BranchCode) VALUES (?, ?, ?, ?, ?, ?);"
         params = (ename, ssn, password, accssLvl, bankCode, branchCode)
         self.db.sendQueryParams(query, params)
+
 
     def addBank(self, bankName, bankCode, bankAddress):
         query = "INSERT INTO Bank (BankName, Code, BankAddress) VALUES (?, ?, ?);"
@@ -84,7 +87,7 @@ JOIN LoanType ON Loan.LoanTypeID = LoanType.LoanTypeID;''')
         self.db.sendQuery("SELECT LoanType FROM dbo.LoanType;")
 
     def showCustomers(self):
-        self.db.sendQuery("SELECT * FROM dbo.Customer;")
+        return self.db.sendQuery("SELECT * FROM dbo.Customer;")
 
     def showEmployees(self):
         self.db.sendQuery("SELECT * FROM dbo.Employee;")

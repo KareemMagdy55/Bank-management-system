@@ -25,6 +25,7 @@ class DB:
             for row in rows:
                 print(row)
             print("=========================================")
+            return rows
         except pyodbc.Error as e:
             print(f"Error occurred while executing the query: {e}")
             print("=========================================")
