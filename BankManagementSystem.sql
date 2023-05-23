@@ -30,7 +30,8 @@ CREATE TABLE Customer (
 	BankCode varchar(10), 
 	BranchCode varchar(10),
   
-	CONSTRAINT Customer_pk PRIMARY KEY (SSN),
+	CONSTRAINT Customer_pk PRIMARY KEY (SSN
+	                                   ),
 	constraint CustomerBranch_fk foreign key (BranchCode) references Branch(BranchNumber), 
 	constraint CustomerBank_fk foreign key (BankCode) references Bank(Code), 
 	CONSTRAINT Customer_uq Unique (Phone)

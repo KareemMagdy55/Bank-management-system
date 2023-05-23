@@ -1,5 +1,4 @@
-import pydoc
-
+from DBMS.handleDB import *
 
 class BankUser:
     def __init__(self, name, ssn, password, bankCode):

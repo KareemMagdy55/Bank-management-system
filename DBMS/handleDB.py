@@ -1,26 +1,46 @@
 import pyodbc
 
 
-# Database management class
-class DBM:
-    # connect to server
+#
+# server = 'sql5110.site4now.net,1433'
+# database = 'db_a998ac_bdbserver001'
+# username = 'db_a998ac_bdbserver001_admin'
+# password = 'databaseproj123'
+class DB:
     def __init__(self):
-        server = 'sql5110.site4now.net,1433'
-        database = 'db_a998ac_bdbserver001'
-        username = 'db_a998ac_bdbserver001_admin'
-        password = 'databaseproj123'
-        self.cursor = None
-        self.db = pyodbc.connect(
-            'DRIVER={SQL Server};SERVER=' + server + ';DATABASE=' + database + ';ENCRYPT=no;UID=' + username + ';PWD=' + password)
+        try:
+
+            self.connection = pyodbc.connect(
+                'Driver={SQL Server};'
+                'Server=sql5110.site4now.net,1433;'
+                'Database=db_a998ac_bdbserver001;'
+                'UID=db_a998ac_bdbserver001_admin;'
+                'PWD=databaseproj123;'
+            )
+            self.cursor = self.connection.cursor()
+            print("Connected to the database successfully!")
+            print("=========================================")
+        except pyodbc.Error as e:
+            print(f"Error occurred while connecting to the database: {e}")
+            print("=========================================")
 
     def sendQuery(self, sqlQuery):
-        self.cursor = self.db.cursor()
-        self.cursor.execute(sqlQuery)
+        try:
+            cursor = self.cursor.execute(sqlQuery)
+            rows = cursor.fetchall()
+            for row in rows:
+                print(row)
+            print("=========================================")
+        except pyodbc.Error as e:
+            print(f"Error occurred while executing the query: {e}")
+            print("=========================================")
 
-        rows = self.cursor.fetchall()
-        for row in rows:
-            print(row)
+    def sendQueryParams(self, sqlQuery, params):
+        self.cursor.execute(sqlQuery, params)
+        self.connection.commit()
 
-    # destructor
     def __del__(self):
-        self.db.close()
+        self.cursor.close()
+        self.connection.close()
+        print("Connection closed successfully!")
+        print("=========================================")

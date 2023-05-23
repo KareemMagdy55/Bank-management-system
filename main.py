@@ -1,7 +1,6 @@
-from DBMS.handleDB import DBM
+from Views import Admin, Customer, Employee
+from Views.Admin import *
 
-# Create an instance of the DBM class
-tempDB = DBM()
+admin = Admin("MO", 12, 45)
 
-# Send a query
-tempDB.sendQuery("SELECT * FROM dbo.Bank;")
+admin.showCustomers()
