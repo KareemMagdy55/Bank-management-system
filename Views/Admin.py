@@ -72,16 +72,16 @@ class Admin(BankUser):
         self.db.sendQueryParams(query, params)
 
     def updateLoan(self, loanNumber, loanStatus):
-        query = " UPDATE Loan SET LoanStatus = ?, EmployeeSSN = ? where LoanType = ?;"
+        query = " UPDATE Loan SET LoanStatus = ?, EmployeeSSN = ? where id = ?;"
         params = (loanStatus, self.ssn, loanNumber)
         self.db.sendQueryParams(query, params)
 
     def showLoansDetails(self):
         return self.db.sendQuery('''SELECT DISTINCT Employee.EmployeeName AS EmployeeName, Customer.CustomerName AS CustomerName, LoanType.LoanType AS LoanType, Loan.*
-FROM Employee
-JOIN Loan ON Employee.SSN = Loan.EmployeeSSN
-JOIN Customer ON Loan.CustomerSSN = Customer.SSN
-JOIN LoanType ON Loan.LoanTypeID = LoanType.LoanTypeID;''')
+                                    FROM Employee
+                                    JOIN Loan ON Employee.SSN = Loan.EmployeeSSN
+                                    JOIN Customer ON Loan.CustomerSSN = Customer.SSN
+                                    JOIN LoanType ON Loan.LoanTypeID = LoanType.LoanTypeID;''')
 
     def showLoansType(self):
         self.db.sendQuery("SELECT LoanType FROM dbo.LoanType;")
