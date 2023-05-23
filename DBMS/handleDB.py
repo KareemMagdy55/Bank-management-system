@@ -1,11 +1,5 @@
 import pyodbc
 
-
-#
-# server = 'sql5110.site4now.net,1433'
-# database = 'db_a998ac_bdbserver001'
-# username = 'db_a998ac_bdbserver001_admin'
-# password = 'databaseproj123'
 class DB:
     def __init__(self):
         try:

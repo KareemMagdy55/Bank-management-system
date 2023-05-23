@@ -22,6 +22,7 @@ class Admin(BankUser):
         params = (cname, ssn, address, phone, password, bankCode, branchCode)
         self.db.sendQueryParams(query, params)
 
+
     def signUpEmployee(self, ename, ssn, password, accssLvl, bankCode, branchCode):
         query = "INSERT INTO Employee (EmployeeName, SSN, EmployeePassword, AccessLevel, BankCode, BranchCode) VALUES (?, ?, ?, ?, ?, ?);"
         params = (ename, ssn, password, accssLvl, bankCode, branchCode)
@@ -35,6 +36,16 @@ class Admin(BankUser):
     def addBranch(self, branchNum, branchAddress, bankCode):
         query = "INSERT INTO Branch (BranchNumber, BranchAddress, BankCode) VALUES (?, ?, ?);"
         params = (branchNum, branchAddress, bankCode)
+        self.db.sendQueryParams(query, params)
+
+    def deleteBank(self, bankCode):
+        query = "DELETE FROM Bank WHERE Code = ?;"
+        params = (bankCode,)
+        self.db.sendQueryParams(query, params)
+
+    def deleteBranch(self, branchNum, bankCode):
+        query = "DELETE FROM Branch WHERE BranchNumber = ? AND BankCode = ?;"
+        params = (branchNum, bankCode)
         self.db.sendQueryParams(query, params)
 
     def addAccount(self, accountType, accountNumber, balance, customerSSN, employeeID):
