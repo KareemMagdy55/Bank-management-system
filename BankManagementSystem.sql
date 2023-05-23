@@ -62,18 +62,16 @@ CREATE TABLE Account (
 	 CONSTRAINT Account_pk PRIMARY KEY (Number),
 );
 
-
-
+
 CREATE TABLE Loan (
 	LoanType varchar(15),
-	Number varchar(15),
+ Number int IDENTITY(1,1), --<
 	Balance float,
 	LoanStatus varchar(15),
-	EmployeeSSN varchar(10), 
-	CustomerSSN varchar( 10),
+	EmployeeSSN varchar(10) NULL, --<
+	CustomerSSN varchar(10),
 
+ CONSTRAINT Loan_pk PRIMARY KEY (Number),
 	Constraint LoanEmp_FK foreign key (EmployeeSSN) references Employee(SSN),
-	Constraint LoanCustomer_FK foreign key (CustomerSSN) references Customer (SSN), 
-
-	CONSTRAINT Loan_pk PRIMARY KEY (Number)
+Constraint LoanCustomer_FK foreign key (CustomerSSN) references Customer (SSN)
 );
