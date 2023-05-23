@@ -5,6 +5,17 @@ class Admin(BankUser):
     def __init__(self, name, ssn, password):
         super().__init__(name, ssn, password, bankCode=None)
         self.db = DB()
+        self.validateAdmin()
+
+    def validateAdmin(self):
+        c = self.db.cursor
+        query = "SELECT * FROM Admin WHERE AdminName=? AND AdminSSN=? AND AdminPassword=?;"
+        c.execute(query, (self.name, self.ssn, self.password))
+        row = c.fetchone()
+        if row is not None:
+            print("Admin Found")
+        else:
+            print("Admin not found !")
 
     def signUpCustomer(self, cname, ssn, address, phone, password, bankCode, branchCode):
         query = "INSERT INTO Customer (CustomerName, SSN, CustomerAddress, Phone, CustomerPassword, BankCode, BranchCode) VALUES (?, ?, ?, ?, ?, ?, ?);"
@@ -36,19 +47,30 @@ class Admin(BankUser):
         params = (loanType, loanNumber, balance, loanStatus, employeeSSN, customerSSN)
         self.db.sendQueryParams(query, params)
 
+    def updateCustomer(self, ossn, cname, ssn, address, phone, password, bankCode, branchCode):
+        query = "UPDATE Customer SET CustomerName = ?, SSN = ?, CustomerAddress = ?, Phone = ?, CustomerPassword = ?, BankCode = ?, BranchCode = ? WHERE SSN = ?;"
+        params = (cname, ssn, address, phone, password, bankCode, branchCode, ossn)
+        self.db.sendQuery(query, params)
+
+    def updateEmployee(self, ossn, ename, ssn, password, accessLevel, bankCode, branchCode):
+        query = "UPDATE Employee SET EmployeeName = ?, SSN = ?, EmployeePassword = ?, AccessLevel = ?, BankCode = ?, BranchCode = ? WHERE SSN = ?;"
+        params = (ename, ssn, password, accessLevel, bankCode, branchCode, ossn)
+        self.db.sendQueryParams(query, params)
+
+    def updateLoan(self, loanNumber, loanStatus):
+        query = " UPDATE Loan SET LoanStatus = ?, EmployeeSSN = ?where LoanType = ?;"
+        params = (loanStatus, self.ssn, loanNumber)
+        self.db.sendQueryParams(query, params)
 
     def showLoansDetails(self):
         self.db.sendQuery("SELECT * FROM dbo.Loan;")
 
-
     def showLoansType(self):
-        self.db.sendQuery("SELECT LoanType FROM dbo.Loan;")
+        self.db.sendQuery("SELECT LoanType FROM dbo.LoanType;")
 
     def showCustomers(self):
         self.db.sendQuery("SELECT * FROM dbo.Customer;")
 
     def showEmployees(self):
         self.db.sendQuery("SELECT * FROM dbo.Employee;")
-
-
 

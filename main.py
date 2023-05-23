@@ -1,6 +1,9 @@
-from Views import Admin, Customer, Employee
+# from Views import Admin, Customer, Employee
 from Views.Admin import *
+# from DBMS.handleDB import *
 
-admin = Admin("MO", 12, 45)
+admin = Admin('kareem', '123', '123')
+# db = DB()
+# db.sendQuery("SELECT * FROM dbo.Admin;")
 
-admin.showCustomers()
+admin.showLoansType()
