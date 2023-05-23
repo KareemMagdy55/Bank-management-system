@@ -1,6 +1,6 @@
 use master
-DROP DATABASE IF EXISTS BankManagementSystem;
-CREATE DATABASE BankManagementSystem
+DROP DATABASE IF EXISTS BankManagementSystem
+CREATE DATABASE BankManagementSysteml
 
 CREATE TABLE Bank (
     Name varchar(15),
@@ -84,21 +84,20 @@ CREATE TABLE Loan (
 );
 
 ALTER TABLE Loan
-DROP LoanType;
+DROP COLUMN Type;
 
 ALTER TABLE Loan
 ADD PaidBalance float;
 
 ALTER TABLE Loan
-ADD ID int;
-
-ALTER TABLE Loan
-ADD CONSTRAINT LoanID_pk PRIMARY KEY (ID);
+ADD LoanTypeID int;
 
 CREATE TABLE LoanType (
-	LoanTypeID int,
-	LoanType varchar(15)
+	ID int,
+	LoanType varchar(15),
+	
+	CONSTRAINT LoanID_pk PRIMARY KEY (ID)
 );
 
 ALTER TABLE Loan
-ADD FOREIGN KEY (ID) REFERENCES LoanType(LoanTypeID);
+ADD CONSTRAINT LoanTypeID_Fk FOREIGN KEY (LoanTypeID) REFERENCES LoanType(ID);
