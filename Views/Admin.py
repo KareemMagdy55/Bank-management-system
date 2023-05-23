@@ -90,5 +90,5 @@ class Admin(BankUser):
         return self.db.sendQuery("SELECT * FROM dbo.Customer;")
 
     def showEmployees(self):
-        self.db.sendQuery("SELECT * FROM dbo.Employee;")
+        return self.db.sendQuery("SELECT * FROM dbo.Employee;")
 
