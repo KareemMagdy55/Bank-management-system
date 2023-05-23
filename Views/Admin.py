@@ -77,7 +77,7 @@ class Admin(BankUser):
         self.db.sendQueryParams(query, params)
 
     def showLoansDetails(self):
-        self.db.sendQuery('''SELECT DISTINCT Employee.EmployeeName AS EmployeeName, Customer.CustomerName AS CustomerName, Loan.*
+        return self.db.sendQuery('''SELECT DISTINCT Employee.EmployeeName AS EmployeeName, Customer.CustomerName AS CustomerName, Loan.*
 FROM Employee
 JOIN Loan ON Employee.SSN = Loan.EmployeeSSN
 JOIN Customer ON Loan.CustomerSSN = Customer.SSN;''')
