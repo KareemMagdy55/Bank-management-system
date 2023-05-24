@@ -1,4 +1,4 @@
-import tkinter as tk
+import customtkinter as tk
 from DBMS.handleDB import DB
 
 db = DB()
@@ -6,7 +6,7 @@ db = DB()
 
 
 def get_table_counts():
-    table_names = ['Bank', 'Branch', 'Account', 'Admin', 'Customer', 'Employee', 'Loan', 'LoanType']
+    table_names = ['Bank', 'Branch', 'Account', 'Customer', 'Employee', 'Loan', 'LoanType']
     table_counts = {}
     for table_name in table_names:
         db.cursor.execute(f'SELECT COUNT(*) FROM {table_name}')
@@ -118,16 +118,20 @@ def get_banks_total_loans():
 
 
 
-# Create a tkinter window
-window = tk.Tk()
+# # Create a tkinter window
+# window = tk.Tk()
 
-# Create a text widget to display the reports
-report_text = tk.Text(window)
-report_text.pack()
+# # Create a text widget to display the reports
+# report_text = tk.Text(window)
+# report_text.pack()
 
 
 # Define a function to display the reports
-def display_reports():
+def display_reports(root, frame):
+    frame.destroy()
+    report_text = tk.CTkTextbox(root)
+    report_text.pack(expand=True, fill=tk.BOTH)
+
     report_text.delete('1.0', tk.END)  # Clear the text widget
 
     # Get table counts
@@ -177,8 +181,8 @@ def display_reports():
     report_text.insert(tk.END, banks_total_loans + '\n\n')
 
 
-report_button = tk.Button(window, text="Generate Reports", command=display_reports)
-report_button.pack()
+# report_button = tk.Button(window, text="Generate Reports", command=display_reports)
+# report_button.pack()
 
-# Start the tkinter event loop
-window.mainloop()
+# # Start the tkinter event loop
+# window.mainloop()

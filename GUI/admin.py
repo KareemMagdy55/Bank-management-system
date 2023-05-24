@@ -390,21 +390,35 @@ def adminPage(root, frame):
             frame.pack(expand=True)
             
             # Fields for CustomerName, SSN, CustomerAddress, Phone, CustomerPassword, BankCode, BranchCode
-            customerNameField = tk.CTkEntry(frame, placeholder_text="Customer Name")
+            nameLabel = tk.CTkLabel(frame, text="Customer Name")
+            nameLabel.pack(anchor=tk.CENTER)
+            customerNameField = tk.CTkEntry(frame)
             customerNameField.insert(0, custname)
-            customerNameField.pack(anchor=tk.CENTER, pady=10)
-            ssnField = tk.CTkEntry(frame, placeholder_text="SSN")
+            customerNameField.pack(anchor=tk.CENTER)
+
+            ssnLabel = tk.CTkLabel(frame, text="SSN")
+            ssnLabel.pack(anchor=tk.CENTER)
+            ssnField = tk.CTkEntry(frame)
             ssnField.insert(0, custssn)
-            ssnField.pack(anchor=tk.CENTER, pady=10)
-            customerAddressField = tk.CTkEntry(frame, placeholder_text="Customer Address")
+            ssnField.pack(anchor=tk.CENTER)
+
+            customerAddressLabel = tk.CTkLabel(frame, text="Customer Address")
+            customerAddressLabel.pack(anchor=tk.CENTER)
+            customerAddressField = tk.CTkEntry(frame)
             customerAddressField.insert(0, custaddress)
-            customerAddressField.pack(anchor=tk.CENTER, pady=10)
-            phoneField = tk.CTkEntry(frame, placeholder_text="Phone")
+            customerAddressField.pack(anchor=tk.CENTER)
+
+            phoneLabel = tk.CTkLabel(frame, text="Phone")
+            phoneLabel.pack(anchor=tk.CENTER)
+            phoneField = tk.CTkEntry(frame)
             phoneField.insert(0, custphone)
-            phoneField.pack(anchor=tk.CENTER, pady=10)
-            customerPasswordField = tk.CTkEntry(frame, placeholder_text="Customer Password")
+            phoneField.pack(anchor=tk.CENTER)
+
+            customerPasswordLabel = tk.CTkLabel(frame, text="Customer Password")
+            customerPasswordLabel.pack(anchor=tk.CENTER)
+            customerPasswordField = tk.CTkEntry(frame)
             customerPasswordField.insert(0, custpassword)
-            customerPasswordField.pack(anchor=tk.CENTER, pady=10)
+            customerPasswordField.pack(anchor=tk.CENTER)
 
             def setBranches(bank):
                 branches_raw = adminObj.db.sendQuery("SELECT BranchNumber FROM Branch WHERE BankCode = '" + bank + "';")
@@ -731,6 +745,26 @@ def adminPage(root, frame):
         backButton = tk.CTkButton(frame, text="Back", command=lambda:adminPage(root, frame))
         backButton.pack(anchor=tk.CENTER, pady=10)
         
+    def show_loans_type(root, frame):
+        rows = adminObj.showLoansType()
+        frame.destroy()
+        frame = tk.CTkFrame(root)
+        frame.pack(expand=True)
+        # Add Header
+        showLoans = tk.CTkLabel(frame, text="All Loan Types", font=("Arial", 30))
+        showLoans.pack(anchor=tk.CENTER, pady=10)
+        rows.insert(0, ['Loan Type Name'])
+        height = len(rows)
+        width = len(rows[0])
+        loanFrame = tk.CTkScrollableFrame(frame,width=150)
+        loanFrame.pack(pady=10)
+        for i in range(height):
+            for j in range(width):
+                b = tk.CTkLabel(loanFrame, text=rows[i][j])
+                b.grid(row=i, column=j,padx=10, pady=10)
+        # Add Back Button
+        backButton = tk.CTkButton(frame, text="Back", command=lambda:adminPage(root, frame))
+        backButton.pack(anchor=tk.CENTER, pady=10)
     # Function to handle the 'Show list of customers' button click
     def showCustomers(root, frame):
         rows = adminObj.showCustomers()
@@ -778,7 +812,7 @@ def adminPage(root, frame):
     # Function to handle the 'Perform operations on loans' button click
     def perform_loan_operations(root, frame):
         # Function to handle the 'New Loan' button click
-        def LoanOperations(root, frame):
+        def LoanOperations(root, frame, prevPage = adminPage):
             frame.destroy()
             frame = tk.CTkFrame(root)
             frame.pack(expand=True)
@@ -875,13 +909,13 @@ def adminPage(root, frame):
                 # Add Update Button
                 updateButton = tk.CTkButton(frame, text="Update", command=lambda:updateLoan(root, frame))
                 updateButton.grid(row=8, column=0, pady=10, padx=10, columnspan=2, sticky="EW")
-                backButton = tk.CTkButton(frame, text="Back", command=lambda:adminPage(root, frame))
+                backButton = tk.CTkButton(frame, text="Back", command=lambda:prevPage(root, frame))
                 backButton.grid(row=9, column=0, pady=10, padx=10, columnspan=2, sticky="EW")
 
             searchbtn = tk.CTkButton(frame, text="Search", command=lambda:searchLoan(root, frame))
             searchbtn.grid(row=2, column=0, pady=10, padx=10, columnspan=2, sticky="EW")
            
-            backButton = tk.CTkButton(frame, text="Back", command=lambda:adminPage(root, frame))
+            backButton = tk.CTkButton(frame, text="Back", command=lambda:prevPage(root, frame))
             backButton.grid(row=3, column=0, pady=10, padx=10, columnspan=2, sticky="EW")
         # Function to handle the 'Add new loan' button click
         def newLoan(root, frame):
@@ -950,6 +984,7 @@ def adminPage(root, frame):
     add_branch_btn = tk.CTkButton(frame, text="Add Bank Branch", command=lambda: add_bank_branch(root,frame))
     delete_branch_btn = tk.CTkButton(frame, text="Delete Bank Branch", command=lambda: delete_bank_branch(root,frame))
     show_loans_btn = tk.CTkButton(frame, text="Show List of Loans", command=lambda: show_loans(root,frame))
+    show_loans_type_btn = tk.CTkButton(frame, text="Show List of Loan Types", command=lambda: show_loans_type(root,frame))
     showCustomers_btn = tk.CTkButton(frame, text="Show List of Customers", command=lambda: showCustomers(root,frame))
     showEmployees_btn = tk.CTkButton(frame, text="Show List of Employees", command=lambda: showEmployees(root,frame))
     perform_loan_operations_btn = tk.CTkButton(frame, text="Perform Operations on Loans", command=lambda: perform_loan_operations(root,frame))
@@ -963,6 +998,7 @@ def adminPage(root, frame):
     add_branch_btn.pack(anchor=tk.CENTER, pady=10)
     delete_branch_btn.pack(anchor=tk.CENTER, pady=10)
     show_loans_btn.pack(anchor=tk.CENTER, pady=10)
+    show_loans_type_btn.pack(anchor=tk.CENTER, pady=10)
     showCustomers_btn.pack(anchor=tk.CENTER, pady=10)
     showEmployees_btn.pack(anchor=tk.CENTER, pady=10)
     perform_loan_operations_btn.pack(anchor=tk.CENTER, pady=10)

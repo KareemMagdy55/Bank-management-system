@@ -2,18 +2,19 @@ from Views.BankUser import *
 
 
 class Customer(BankUser):
-    def __init__(self, name, ssn, password, bankCode):
-        super().__init__(name, ssn, password, bankCode)
+    def __init__(self, name, ssn, password):
+        super().__init__(name, ssn, password)
         self.db = DB()
-        self.validateCustomer()
 
     def validateCustomer(self):
         c = self.db.cursor
-        query = "SELECT * FROM dbo.Customer WHERE CustomerName=? AND SSN=? AND CustomerPassword=? AND BankCode=?;"
-        c.execute(query, (self.name, self.ssn, self.password, self.bankCode))
+        query = "SELECT * FROM dbo.Customer WHERE SSN=? AND CustomerPassword=?;"
+        c.execute(query, (self.ssn, self.password))
         row = c.fetchone()
         if row is not None:
             print("Customer Found:")
+            self.name = row[0]
+            self.bankCode = row[5]
             return True
         else:
             print("Customer not found !")

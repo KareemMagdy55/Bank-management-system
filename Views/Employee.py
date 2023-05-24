@@ -15,9 +15,9 @@ class Employee(BankUser):
             self.name = row[0]
             self.bankCode = row[4]
             self.branchCode = row[5]
-            return ("Employee Found")
+            return True
         else:
-            return "Employee not found !"
+            return False
 
     def signUpCustomer(self, cname, ssn, address, phone, password):
         query = "INSERT INTO Customer (CustomerName, SSN, CustomerAddress, Phone, CustomerPassword, BankCode, BranchCode) VALUES (?, ?, ?, ?, ?, ?, ?);"
@@ -27,11 +27,12 @@ class Employee(BankUser):
     def updateCustomer(self, ossn, cname, ssn, address, phone, password, bankCode, branchCode):
         query = "UPDATE Customer SET CustomerName = ?, SSN = ?, CustomerAddress = ?, Phone = ?, CustomerPassword = ?, BankCode = ?, BranchCode = ? WHERE SSN = ?;"
         params = (cname, ssn, address, phone, password, bankCode, branchCode, ossn)
-        return self.db.sendQuery(query, params)
+        return self.db.sendQueryParams(query, params)
 
     def updateLoan(self, loanNumber, loanStatus):
-        query = " UPDATE Loan SET LoanStatus = ?, EmployeeSSN = ?where id = ?;"
+        query = " UPDATE Loan SET LoanStatus = ?, EmployeeSSN = ? WHERE id = ?;"
         params = (loanStatus, self.ssn, loanNumber)
+        print(params)
         return self.db.sendQueryParams(query, params)
 
     def showLoansDetails(self):
@@ -46,5 +47,4 @@ class Employee(BankUser):
 
     def showCustomers(self):
         return self.db.sendQuery("SELECT * FROM dbo.Customer;")
-
 
