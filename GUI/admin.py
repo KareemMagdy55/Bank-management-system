@@ -3,7 +3,7 @@ import tkinter.messagebox as messagebox
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Views.Admin import *
-import employee as emp
+import GUI.employee as emp
 
 global adminObj
 

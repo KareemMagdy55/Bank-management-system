@@ -1,11 +1,11 @@
-import customer
+import GUI.customer
 import customtkinter as tk
 from tkinter import messagebox
 # import module in ../Views/Employee.py
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Views.Employee import *
-import admin
+import GUI.admin
 
 global empObj
 
@@ -127,7 +127,7 @@ def loansPage(root, frame):
     frame.destroy()
     frame = tk.CTkFrame(root)
     frame.pack(expand=True)
-    
+
     def show_loans(root, frame):
         rows = empObj.showLoansDetails()
         frame.destroy()

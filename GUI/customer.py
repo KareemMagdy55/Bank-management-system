@@ -3,7 +3,7 @@ from tkinter import messagebox
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import Views.Customer as cust
-import employee as emp
+import GUI.employee as emp
 global custObj
 
 

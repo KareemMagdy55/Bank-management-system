@@ -1,7 +1,7 @@
 import customtkinter as tk
-import employee as emp
-import admin
-import customer as cust
+import GUI.employee as emp
+import GUI.admin
+import GUI.customer as cust
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import Report.report as report
