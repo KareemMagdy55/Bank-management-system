@@ -14,12 +14,14 @@ class Customer(BankUser):
         row = c.fetchone()
         if row is not None:
             print("Customer Found:")
+            return True
         else:
             print("Customer not found !")
+            return False;
 
     def requestLoan(self, loanType, loanTypeID, amount):
-        query = "INSERT INTO dbo.Loan (LoanType, Balance, LoanTypeID, CustomerSSN,EmployeeSSN, LoanStatus, PaidBalance) VALUES (?, ?, ?, ?,NULL, 'REQ', 0 );"
-        params = (loanType, amount, loanTypeID, self.ssn)
+        query = "INSERT INTO dbo.Loan ( Balance, LoanTypeID, CustomerSSN,EmployeeSSN, LoanStatus, PaidBalance) VALUES ( ?, ?, ?,NULL, 'REQ', 0 );"
+        params = ( amount, loanTypeID, self.ssn)
         self.db.sendQueryParams(query, params)
 
     def startLoan(self, loanNumber, accountNumber):
