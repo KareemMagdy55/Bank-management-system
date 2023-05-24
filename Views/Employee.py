@@ -12,42 +12,39 @@ class Employee(BankUser):
         c.execute(query, (self.ssn, self.password))
         row = c.fetchone()
         if row is not None:
-            print("Employee Found")
             self.name = row[0]
             self.bankCode = row[4]
             self.branchCode = row[5]
+            return ("Employee Found")
         else:
-            print("Employee not found !")
+            return "Employee not found !"
 
     def signUpCustomer(self, cname, ssn, address, phone, password):
         query = "INSERT INTO Customer (CustomerName, SSN, CustomerAddress, Phone, CustomerPassword, BankCode, BranchCode) VALUES (?, ?, ?, ?, ?, ?, ?);"
         params = (cname, ssn, address, phone, password, self.bankCode, self.branchCode)
-        self.db.sendQueryParams(query, params)
+        return self.db.sendQueryParams(query, params)
 
     def updateCustomer(self, ossn, cname, ssn, address, phone, password, bankCode, branchCode):
         query = "UPDATE Customer SET CustomerName = ?, SSN = ?, CustomerAddress = ?, Phone = ?, CustomerPassword = ?, BankCode = ?, BranchCode = ? WHERE SSN = ?;"
         params = (cname, ssn, address, phone, password, bankCode, branchCode, ossn)
-        self.db.sendQuery(query, params)
+        return self.db.sendQuery(query, params)
 
     def updateLoan(self, loanNumber, loanStatus):
         query = " UPDATE Loan SET LoanStatus = ?, EmployeeSSN = ?where id = ?;"
         params = (loanStatus, self.ssn, loanNumber)
-        self.db.sendQueryParams(query, params)
+        return self.db.sendQueryParams(query, params)
 
     def showLoansDetails(self):
-        self.db.sendQuery('''SELECT DISTINCT Employee.EmployeeName AS EmployeeName, Customer.CustomerName AS CustomerName, LoanType.LoanType AS LoanType, Loan.*
-FROM Employee
-JOIN Loan ON Employee.SSN = Loan.EmployeeSSN
-JOIN Customer ON Loan.CustomerSSN = Customer.SSN
-JOIN LoanType ON Loan.LoanTypeID = LoanType.LoanTypeID;''')
+       return self.db.sendQuery('''SELECT DISTINCT Employee.EmployeeName AS EmployeeName, Customer.CustomerName AS CustomerName, LoanType.LoanType AS LoanType, Loan.*
+                                    FROM Employee
+                                    JOIN Loan ON Employee.SSN = Loan.EmployeeSSN
+                                    JOIN Customer ON Loan.CustomerSSN = Customer.SSN
+                                    JOIN LoanType ON Loan.LoanTypeID = LoanType.LoanTypeID;''')
 
     def showLoansType(self):
-        self.db.sendQuery("SELECT LoanType FROM dbo.LoanType;")
+        return self.db.sendQuery("SELECT LoanType FROM dbo.LoanType;")
 
     def showCustomers(self):
-        self.db.sendQuery("SELECT * FROM dbo.Customer;")
-
-
-emp = Employee
+        return self.db.sendQuery("SELECT * FROM dbo.Customer;")
 
 
