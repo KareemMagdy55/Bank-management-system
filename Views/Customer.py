@@ -24,17 +24,11 @@ class Customer(BankUser):
         params = ( amount, loanTypeID, self.ssn)
         self.db.sendQueryParams(query, params)
 
-    def startLoan(self, loanNumber, accountNumber):
-        query = "update dbo.Loan set LoanStatus = ? where id = ? AND LoanStatus = 'APR';"
-        self.db.sendQueryParams(query, ('START', loanNumber))
-        getBalance = "Select Balance, CustomerSSN from dbo.Loan where id = ?;"
-        self.db.cursor.execute(getBalance, loanNumber)
-        row = self.db.cursor.fetchall()
+    def startLoan(self, loanNumber):
+        query = "UPDATE Loan SET LoanStatus = 'ACT'where id = ?;"
+        self.db.sendQueryParams(query, (loanNumber))
 
-        balance = row[0]
-        cSSN = row[1]
 
-        updateAccBalance = "update dbo.Account set Balance = Balance + ? where CustomerSSN = ? AND Number = ?;"
-        self.db.sendQueryParams(updateAccBalance, (balance, cSSN, accountNumber))
+cus =  Customer("Kareem", "54", "123", "CIB")
 
-    # def startLoan(self):
+cus.startLoan('16')
