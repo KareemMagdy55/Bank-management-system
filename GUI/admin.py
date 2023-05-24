@@ -11,6 +11,11 @@ def adminPage(root, frame):
     frame.destroy()
     frame = tk.CTkFrame(root)
     frame.pack(expand=True)
+
+    # Welcome message
+
+    welcomeLabel = tk.CTkLabel(frame, text="Welcome, " + adminObj.name, font=("Arial", 20, "bold"))
+    welcomeLabel.pack(anchor=tk.CENTER, pady=15, padx=15)
     # Function to handle the 'Sign up' button click
     def sign_up(root, frame):
         def signup_employee(root, frame):
@@ -26,14 +31,20 @@ def adminPage(root, frame):
             nameLabel.grid(row=0, column=1, padx=10, pady=2)
             employeeNameField = tk.CTkEntry(frame)
             employeeNameField.grid(row=1, column=1, padx=10, pady=2)
+
+            accessLevelLabel = tk.CTkLabel(frame, text="Access Level")
+            accessLevelLabel.grid(row=2, column=0, padx=10, pady=2, columnspan=2)
+            accessLevelField = tk.CTkEntry(frame)
+            accessLevelField.grid(row=3, column=0, padx=10, pady=2, columnspan=2)
+
             ssnLabel = tk.CTkLabel(frame, text="SSN")
-            ssnLabel.grid(row=2, column=0, padx=10, pady=2)
+            ssnLabel.grid(row=4, column=0, padx=10, pady=2)
             ssnField = tk.CTkEntry(frame)
-            ssnField.grid(row=3, column=0, padx=10, pady=2)
+            ssnField.grid(row=5, column=0, padx=10, pady=2)
             employeePasswordLabel = tk.CTkLabel(frame, text="Employee Password")
-            employeePasswordLabel.grid(row=2, column=1, padx=10, pady=2)
+            employeePasswordLabel.grid(row=4, column=1, padx=10, pady=2)
             employeePasswordField = tk.CTkEntry(frame)
-            employeePasswordField.grid(row=3, column=1, padx=10, pady=2)
+            employeePasswordField.grid(row=5, column=1, padx=10, pady=2)
             
 
             def setBranches(bank):
@@ -57,9 +68,9 @@ def adminPage(root, frame):
             for bank in banks_raw:
                 banks.append(bank[0])
             selbanklabel = tk.CTkLabel(frame, text="Select Bank")
-            selbanklabel.grid(row=4, column=0, padx=10, pady=2)
+            selbanklabel.grid(row=6, column=0, padx=10, pady=2)
             selectbank = tk.CTkOptionMenu(frame,values= banks,command=setBranches)
-            selectbank.grid(row=5, column=0, padx=10, pady=2)
+            selectbank.grid(row=7, column=0, padx=10, pady=2)
             
             # Button to finalize signup
             def finalizeSignup():
@@ -75,7 +86,11 @@ def adminPage(root, frame):
                 if password == "":
                     messagebox.showerror("Employee Signup", "Employee password cannot be empty")
                     return
-                accessLevel = 1
+                
+                accessLevel = accessLevelField.get()
+                if not accessLevel.isdigit():
+                    messagebox.showerror("Employee Signup", "Access level has to be a number")
+                    return
                 bank = selectbank.get()
                 branch = selectbranch.get()
                 # ename: Any,
@@ -88,7 +103,7 @@ def adminPage(root, frame):
                 messagebox.showinfo("Employee Signup", "Employee signed up successfully")
                 adminPage(root, frame)
             finalizeSignupButton = tk.CTkButton(frame, text="Finalize Signup", command=finalizeSignup)
-            finalizeSignupButton.grid(row=6, column=0, columnspan=2, pady=10, sticky ="EW")
+            finalizeSignupButton.grid(row=8, column=0, columnspan=2, pady=10, sticky ="EW")
 
             # Branches Menu
             branches_raw = adminObj.db.sendQuery("SELECT BranchNumber FROM Branch WHERE BankCode = '" + selectbank.get() + "';")
@@ -96,7 +111,7 @@ def adminPage(root, frame):
             for branch in branches_raw:
                 branches.append(branch[0])
             selbranchlabel = tk.CTkLabel(frame, text="Select Branch")
-            selbranchlabel.grid(row=4, column=1, padx=10, pady=2)
+            selbranchlabel.grid(row=6, column=1, padx=10, pady=2)
 
             if len(branches) == 0:
                 branches.append("No Branches")
@@ -107,11 +122,11 @@ def adminPage(root, frame):
                 selectbranch = tk.CTkOptionMenu(frame,values=branches, state="normal")
                 selectbranch.set(branches[0])
                 finalizeSignupButton.configure(state="normal")
-            selectbranch.grid(row=5, column=1, padx=10, pady=2)
+            selectbranch.grid(row=7, column=1, padx=10, pady=2)
             
            
             BackButton = tk.CTkButton(frame, text="Back", command=lambda:adminPage(root, frame))
-            BackButton.grid(row=7, column=0, columnspan=2, pady=10, sticky ="EW")
+            BackButton.grid(row=9, column=0, columnspan=2, pady=10, sticky ="EW")
         def signup_customer(root, frame):
             frame.destroy()
             frame = tk.CTkFrame(root)
@@ -246,6 +261,7 @@ def adminPage(root, frame):
 
             empname = emprow[0][0]
             emppassword = emprow[0][2]
+            empaccesslevel = emprow[0][3]
             empbankcode = emprow[0][4]
             empbranchcode = emprow[0][5]
 
@@ -265,17 +281,23 @@ def adminPage(root, frame):
             employeeNameField.insert(0, empname)
             employeeNameField.grid(row=1, column=1, padx=10, pady=2)
 
+            accessLabel = tk.CTkLabel(frame, text="Access Level")
+            accessLabel.grid(row=2, column=0, padx=10, pady=2, columnspan=2)
+            accessField = tk.CTkEntry(frame)
+            accessField.insert(0, empaccesslevel)
+            accessField.grid(row=3, column=0, padx=10, pady=2, columnspan=2)
+
             ssnLabel = tk.CTkLabel(frame, text="SSN")
-            ssnLabel.grid(row=2, column=0, padx=10, pady=2)
+            ssnLabel.grid(row=4, column=0, padx=10, pady=2)
             ssnField = tk.CTkEntry(frame)
             ssnField.insert(0, empssn)
-            ssnField.grid(row=3, column=0, padx=10, pady=2)
+            ssnField.grid(row=5, column=0, padx=10, pady=2)
 
             passwordLabel = tk.CTkLabel(frame, text="Password")
-            passwordLabel.grid(row=2, column=1, padx=10, pady=2)
+            passwordLabel.grid(row=4, column=1, padx=10, pady=2)
             employeePasswordField = tk.CTkEntry(frame)
             employeePasswordField.insert(0, emppassword)
-            employeePasswordField.grid(row=3, column=1, padx=10, pady=2)
+            employeePasswordField.grid(row=5, column=1, padx=10, pady=2)
             
 
             def setBranches(bank):
@@ -299,10 +321,10 @@ def adminPage(root, frame):
             for bank in banks_raw:
                 banks.append(bank[0])
             selbanklabel = tk.CTkLabel(frame, text="Select Bank")
-            selbanklabel.grid(row=4, column=0, padx=10, pady=2)
+            selbanklabel.grid(row=6, column=0, padx=10, pady=2)
             selectbank = tk.CTkOptionMenu(frame,values= banks,command=setBranches)
             
-            selectbank.grid(row=5, column=0, padx=10, pady=2)
+            selectbank.grid(row=7, column=0, padx=10, pady=2)
             selectbank.set(empbankcode)
             
             # Button to finalize signup
@@ -319,21 +341,18 @@ def adminPage(root, frame):
                 if password == "":
                     messagebox.showerror("Employee Update", "Password cannot be empty")
                     return
-                accessLevel = 1
+                accessLevel = accessField.get()
+                if not accessLevel.isdigit():
+                    messagebox.showerror("Employee Update", "Access Level must be a number")
+                    return
                 bank = selectbank.get()
                 branch = selectbranch.get()
-    #             ossn: Any,
-                    # ename: Any,
-                    # ssn: Any,
-                    # password: Any,
-                    # accessLevel: Any,
-                    # bankCode: Any,
-                    # branchCode: Any
+
                 adminObj.updateEmployee(ssn, name, ssn, password, accessLevel, bank, branch)
                 messagebox.showinfo("Employee Update", "Employee updated successfully")
                 adminPage(root, frame)
             finalizeUpdateButton = tk.CTkButton(frame, text="Finalize Update", command=finalizeUpdate)
-            finalizeUpdateButton.grid(row=6, column=0, padx=10, pady=2, columnspan=2, sticky="EW")
+            finalizeUpdateButton.grid(row=8, column=0, padx=10, pady=2, columnspan=2, sticky="EW")
 
             # Branches Menu
             branches_raw = adminObj.db.sendQuery("SELECT BranchNumber FROM Branch WHERE BankCode = '" + selectbank.get() + "';")
@@ -341,7 +360,7 @@ def adminPage(root, frame):
             for branch in branches_raw:
                 branches.append(branch[0])
             selbranchlabel = tk.CTkLabel(frame, text="Select Branch")
-            selbranchlabel.grid(row=4, column=1, padx=10, pady=2)
+            selbranchlabel.grid(row=6, column=1, padx=10, pady=2)
 
             if len(branches) == 0:
                 branches.append("No Branches")
@@ -352,11 +371,11 @@ def adminPage(root, frame):
                 selectbranch = tk.CTkOptionMenu(frame,values=branches, state="normal")
                 selectbranch.set(empbranchcode)
                 finalizeUpdateButton.configure(state="normal")
-            selectbranch.grid(row=5, column=1, padx=10, pady=2)
+            selectbranch.grid(row=7, column=1, padx=10, pady=2)
             
             
             BackButton = tk.CTkButton(frame, text="Back", command=lambda:adminPage(root, frame))
-            BackButton.grid(row=7, column=0, padx=10, pady=2, columnspan=2, sticky="EW")
+            BackButton.grid(row=9, column=0, padx=10, pady=2, columnspan=2, sticky="EW")
         def update_customer(root, frame, custssn):
             #TODO Apply grid and form validation to all widgets
             custrow = adminObj.db.sendQuery("SELECT * FROM Customer WHERE SSN = '" + custssn + "';")
@@ -703,31 +722,126 @@ def adminPage(root, frame):
         backButton.pack(anchor=tk.CENTER, pady=10)
 
     # Function to handle the 'Perform operations on loans' button click
-    def perform_loan_operations():
+    def perform_loan_operations(root, frame):
+        # Function to handle the 'New Loan' button click
         def LoanOperations(root, frame):
             frame.destroy()
             frame = tk.CTkFrame(root)
             frame.pack(expand=True)
             # Add Header
-            loanOperations = tk.CTkLabel(frame, text="Loan Operations", font=("Arial", 30))
-            loanOperations.pack(anchor=tk.CENTER, pady=10)
-            # Add Buttons
-            showLoansButton = tk.CTkButton(frame, text="Show list of loans", command=lambda:show_loans(root, frame))
-            showLoansButton.pack(anchor=tk.CENTER, pady=10)
+            updateLoanLabel = tk.CTkLabel(frame, text="Update Loan", font=("Arial", 30))
+            updateLoanLabel.grid(row=0, column=0, pady=10, padx=10)
+            # Search for loan
+            loanIDLabel = tk.CTkLabel(frame, text="Loan ID")
+            loanIDLabel.grid(row=1, column=0, pady=2, padx=10)
+            loanIDEntry = tk.CTkEntry(frame)
+            loanIDEntry.grid(row=1, column=1, pady=2, padx=10)
+
+            def searchLoan(root, frame):
+                loanID = loanIDEntry.get()
+                loanDetails = adminObj.db.sendQuery(f"SELECT * FROM Loan WHERE id = {loanID}")
+                if len(loanDetails) == 0:
+                    messagebox.showerror("Loan Search", "Loan not found")
+                    return
+                loanBal = loanDetails[0][0]
+                loanStatus = loanDetails[0][1]
+                loanEmpSSN = loanDetails[0][2]
+                loanCustSSN = loanDetails[0][3]
+                loanPaidBal = loanDetails[0][4]
+                if loanPaidBal == None:
+                    loanPaidBal = 0
+                loanTypeID = loanDetails[0][6]
+
+                frame.destroy()
+                frame = tk.CTkFrame(root)
+                frame.pack(expand=True)
+
+                # Add Header
+                titleLabel = tk.CTkLabel(frame, text="Update Loan", font=("Arial", 30))
+                titleLabel.grid(row=0, column=0, pady=10, padx=10)
+
+                # Add Labels and Entry Boxes
+                loanCustSSNLabel = tk.CTkLabel(frame, text="Customer SSN")
+                loanCustSSNLabel.grid(row=1, column=0, pady=2, padx=10)
+                loanCustSSNEntry = tk.CTkEntry(frame)
+                loanCustSSNEntry.grid(row=1, column=1, pady=2, padx=10)
+                loanCustSSNEntry.insert(0, loanCustSSN)
+                loanCustSSNEntry.configure(state="disabled")
+
+                loanEmpSSNLabel = tk.CTkLabel(frame, text="Employee SSN")
+                loanEmpSSNLabel.grid(row=2, column=0, pady=2, padx=10)
+                loanEmpSSNEntry = tk.CTkEntry(frame)
+                loanEmpSSNEntry.grid(row=2, column=1, pady=2, padx=10)
+                loanEmpSSNEntry.insert(0, loanEmpSSN)
+                loanEmpSSNEntry.configure(state="disabled")
+
+                
+                # Get loan type name from loan type id
+                loanTypes_raw = adminObj.showLoansType()
+                loanTypes = []
+                for loan in loanTypes_raw:
+                    loanTypes.append(loan[0])
+                
+                loanTypeLabel = tk.CTkLabel(frame, text="Loan Type")
+                loanTypeLabel.grid(row=4, column=0, pady=2, padx=10)
+                loanTypeMenu = tk.CTkOptionMenu(frame, values = loanTypes, state="disabled")
+                loanTypeMenu.grid(row=4, column=1, pady=2, padx=10)
+                loanTypeMenu.set(loanTypes[loanTypeID-1])
+
+                loanBalLabel = tk.CTkLabel(frame, text="Loan Balance")
+                loanBalLabel.grid(row=5, column=0, pady=2, padx=10)
+                loanBalEntry = tk.CTkEntry(frame)
+                loanBalEntry.grid(row=5, column=1, pady=2, padx=10)
+                loanBalEntry.insert(0, loanBal)
+                loanBalEntry.configure(state="disabled")
+
+                loanPaidBalLabel = tk.CTkLabel(frame, text="Paid Balance")
+                loanPaidBalLabel.grid(row=6, column=0, pady=2, padx=10)
+                loanPaidBalEntry = tk.CTkEntry(frame)
+                loanPaidBalEntry.grid(row=6, column=1, pady=2, padx=10)
+                loanPaidBalEntry.insert(0, loanPaidBal)
+                loanPaidBalEntry.configure(state="disabled")
+
+                loanStatusLabel = tk.CTkLabel(frame, text="Loan Status")
+                loanStatusLabel.grid(row=7, column=0, pady=2, padx=10)
+                loanStatusList = ["ACT", "NACT", "REQ", "REJ"]
+                loanStatusMenu = tk.CTkOptionMenu(frame, values = loanStatusList)
+                loanStatusMenu.grid(row=7, column=1, pady=2, padx=10)
+                loanStatusMenu.set(loanStatus)
+
+                # Function to handle the 'Update' button click
+                def updateLoan(root, frame):
+                    
+                    loanStatus = loanStatusMenu.get()
+                    
+                    adminObj.updateLoan(loanID, loanStatus)
+                    messagebox.showinfo("Loan Update", "Loan updated successfully")
+                    adminPage(root, frame)
+                
+                # Add Update Button
+                updateButton = tk.CTkButton(frame, text="Update", command=lambda:updateLoan(root, frame))
+                updateButton.grid(row=8, column=0, pady=10, padx=10, columnspan=2, sticky="EW")
+                backButton = tk.CTkButton(frame, text="Back", command=lambda:adminPage(root, frame))
+                backButton.grid(row=9, column=0, pady=10, padx=10, columnspan=2, sticky="EW")
+
+            searchbtn = tk.CTkButton(frame, text="Search", command=lambda:searchLoan(root, frame))
+            searchbtn.grid(row=2, column=0, pady=10, padx=10, columnspan=2, sticky="EW")
+           
             backButton = tk.CTkButton(frame, text="Back", command=lambda:adminPage(root, frame))
-            backButton.pack(anchor=tk.CENTER, pady=10)
+            backButton.grid(row=3, column=0, pady=10, padx=10, columnspan=2, sticky="EW")
+        # Function to handle the 'Add new loan' button click
         def newLoan(root, frame):
             frame.destroy()
             frame = tk.CTkFrame(root)
             frame.pack(expand=True)
             # Add Header
             newLoan = tk.CTkLabel(frame, text="New Loan", font=("Arial", 30))
-            newLoan.pack(anchor=tk.CENTER, pady=10)
+            newLoan.grid(row=0, column=0, pady=10, padx=10)
             # Add Labels and Entry Boxes
             customerSSNLabel = tk.CTkLabel(frame, text="Customer SSN")
-            customerSSNLabel.grid(row=0, column=0, pady=2, padx=10)
+            customerSSNLabel.grid(row=1, column=0, pady=2, padx=10)
             customerSSNEntry = tk.CTkEntry(frame)
-            customerSSNEntry.grid(row=0, column=1, pady=2, padx=10)
+            customerSSNEntry.grid(row=1, column=1, pady=2, padx=10)
 
 
             
@@ -737,14 +851,14 @@ def adminPage(root, frame):
                 loanTypes.append(loan[0])
             
             loanTypeLabel = tk.CTkLabel(frame, text="Loan Type")
-            loanTypeLabel.grid(row=1, column=0, pady=2, padx=10)
+            loanTypeLabel.grid(row=2, column=0, pady=2, padx=10)
             loanTypeMenu = tk.CTkOptionMenu(frame, values = loanTypes)
-            loanTypeMenu.grid(row=1, column=1, pady=2, padx=10)
+            loanTypeMenu.grid(row=2, column=1, pady=2, padx=10)
 
             balanceLabel = tk.CTkLabel(frame, text="Balance")
-            balanceLabel.grid(row=2, column=0, pady=2, padx=10)
+            balanceLabel.grid(row=3, column=0, pady=2, padx=10)
             balanceEntry = tk.CTkEntry(frame)
-            balanceEntry.grid(row=2, column=1, pady=2, padx=10)
+            balanceEntry.grid(row=3, column=1, pady=2, padx=10)
             # Add Button
             def addLoan():
                 loanType = loanTypeMenu.get()
@@ -759,17 +873,17 @@ def adminPage(root, frame):
                 messagebox.showinfo("New Loan", "Loan added successfully")
                 adminPage(root, frame)
             addLoanButton = tk.CTkButton(frame, text="Add Loan", command=addLoan)
-            addLoanButton.pack(anchor=tk.CENTER, pady=10)
-            backButton = tk.CTkButton(frame, text="Back", command=lambda:LoanOperations(root, frame))
-            backButton.pack(anchor=tk.CENTER, pady=10)
+            addLoanButton.grid(row=4, column=0, pady=10, padx=10, columnspan=2, sticky="EW")
+            backButton = tk.CTkButton(frame, text="Back", command=lambda:perform_loan_operations(root, frame))
+            backButton.grid(row = 5, column= 0, pady=10, padx=10,columnspan=2, sticky="EW")
         frame.destroy()
         frame = tk.CTkFrame(root)
         frame.pack(expand=True)
 
-        newLoan = tk.CTkButton(frame, text="New Loan", command=lambda:newLoan(root, frame))
-        newLoan.pack(anchor=tk.CENTER, pady=10)
-        loanOperations = tk.CTkButton(frame, text="Update Loan", command=lambda:LoanOperations(root, frame))
-        loanOperations.pack(anchor=tk.CENTER, pady=10)
+        newLoanBtn = tk.CTkButton(frame, text="New Loan", command=lambda:newLoan(root, frame))
+        newLoanBtn.pack(anchor=tk.CENTER, pady=10)
+        loanOperationsBtn = tk.CTkButton(frame, text="Update Loan", command=lambda:LoanOperations(root, frame))
+        loanOperationsBtn.pack(anchor=tk.CENTER, pady=10)
         backButton = tk.CTkButton(frame, text="Back", command=lambda:adminPage(root, frame))
         backButton.pack(anchor=tk.CENTER, pady=10)
 
