@@ -23,19 +23,15 @@ def adminPage(root, frame):
             frame = tk.CTkFrame(root)
             frame.pack(expand=True)
             # Fields for EmployeeName, SSN, EmployeePassword, AccessLevel, BankCode, BranchCode
-            idlabel = tk.CTkLabel(frame, text="Employee ID")
-            idlabel.grid(row=0, column=0, padx=10, pady=2)
-            employeeIDField = tk.CTkEntry(frame)
-            employeeIDField.grid(row=1, column=0, padx=10, pady=2)
             nameLabel = tk.CTkLabel(frame, text="Employee Name")
-            nameLabel.grid(row=0, column=1, padx=10, pady=2)
+            nameLabel.grid(row=0, column=0, padx=10, pady=2)
             employeeNameField = tk.CTkEntry(frame)
-            employeeNameField.grid(row=1, column=1, padx=10, pady=2)
+            employeeNameField.grid(row=1, column=0, padx=10, pady=2)
 
             accessLevelLabel = tk.CTkLabel(frame, text="Access Level")
-            accessLevelLabel.grid(row=2, column=0, padx=10, pady=2, columnspan=2)
+            accessLevelLabel.grid(row=0, column=1, padx=10, pady=2, columnspan=2)
             accessLevelField = tk.CTkEntry(frame)
-            accessLevelField.grid(row=3, column=0, padx=10, pady=2, columnspan=2)
+            accessLevelField.grid(row=1, column=1, padx=10, pady=2, columnspan=2)
 
             ssnLabel = tk.CTkLabel(frame, text="SSN")
             ssnLabel.grid(row=4, column=0, padx=10, pady=2)
@@ -79,7 +75,7 @@ def adminPage(root, frame):
                     messagebox.showerror("Employee Signup", "Employee name cannot be empty")
                     return
                 ssn = ssnField.get()
-                if len(ssn) != 9 or not ssn.isdigit():
+                if len(ssn) > 9 or not ssn.isdigit():
                     messagebox.showerror("Employee Signup", "SSN has to be 9 digits")
                     return
                 password = employeePasswordField.get()
@@ -655,6 +651,64 @@ def adminPage(root, frame):
         BackButton = tk.CTkButton(frame, text="Back", command=lambda:adminPage(root, frame))
         BackButton.pack(anchor=tk.CENTER, pady=10)
 
+    # Function to handle the 'Add Account' button click
+    def add_account(root, frame):
+        #accountType, accountNumber, balance, customerSSN, employeeID
+        frame.destroy()
+        frame = tk.CTkFrame(root)
+        frame.pack(expand=True)
+
+        # Fields for accountType, accountNumber, balance, customerSSN, employeeID
+        fieldsFrame = tk.CTkFrame(frame)
+        fieldsFrame.pack(anchor=tk.CENTER, pady=10, padx=10)
+
+        customerSSNLabel = tk.CTkLabel(fieldsFrame, text="Customer SSN")
+        customerSSNLabel.grid(row=0, column=0, pady=2, padx=10)
+        customerSSNField = tk.CTkEntry(fieldsFrame)
+        customerSSNField.grid(row=0, column=1, pady=2, padx=10)
+
+        accountTypes = ["Checking", "Saving"]
+        accountTypeLabel = tk.CTkLabel(fieldsFrame, text="Account Type")
+        accountTypeLabel.grid(row=1, column=0, pady=2, padx=10)
+        accountTypeMenu = tk.CTkOptionMenu(fieldsFrame, values=accountTypes)
+        accountTypeMenu.grid(row=1, column=1, pady=2, padx=10)
+
+        accountNumberLabel = tk.CTkLabel(fieldsFrame, text="Account Number")
+        accountNumberLabel.grid(row=2, column=0, pady=2, padx=10)
+        accountNumberField = tk.CTkEntry(fieldsFrame)
+        accountNumberField.grid(row=2, column=1, pady=2, padx=10)
+
+        balanceLabel = tk.CTkLabel(fieldsFrame, text="Balance")
+        balanceLabel.grid(row=3, column=0, pady=2, padx=10)
+        balanceField = tk.CTkEntry(fieldsFrame)
+        balanceField.grid(row=3, column=1, pady=2, padx=10)
+
+        def finalizeAdd():
+            accountType = accountTypeMenu.get()
+            accountNumber = accountNumberField.get()
+            if accountNumber == "":
+                messagebox.showerror("Error", "Account Number cannot be empty")
+                return
+            balance = balanceField.get()
+            if balance == "" or not balance.isdigit():
+                messagebox.showerror("Error", "Balance cannot be empty and must be a number")
+                return
+            customerSSN = customerSSNField.get()
+            if customerSSN == "" or not customerSSN.isdigit():
+                messagebox.showerror("Error", "Customer SSN cannot be empty and must be a number")
+                return
+            try:
+                adminObj.addAccount(accountType, accountNumber, balance, customerSSN)
+                messagebox.showinfo("Account Add", "Account added successfully")
+                adminPage(root, frame)
+            except:
+                messagebox.showerror("Error", "Customer does not exist")
+                return
+
+        createAccountButton = tk.CTkButton(frame, text="Create Account", command=lambda:finalizeAdd())
+        createAccountButton.pack(anchor=tk.CENTER, pady=10)
+
+
     # Function to handle the 'Show list of loans' button click
     def show_loans(root, frame):
         rows = adminObj.showLoansDetails()
@@ -890,6 +944,7 @@ def adminPage(root, frame):
     # Create and configure the buttons
     sign_up_btn = tk.CTkButton(frame, text="Sign up", command= lambda: sign_up(root,frame))
     update_details_btn = tk.CTkButton(frame, text="Update User Details", command=lambda: update_user_details(root,frame))
+    add_account_btn = tk.CTkButton(frame, text="Add Account", command=lambda: add_account(root,frame))
     add_bank_btn = tk.CTkButton(frame, text="Add Bank", command=lambda: add_bank(root,frame))
     delete_bank_btn = tk.CTkButton(frame, text="Delete Bank", command=lambda: delete_bank(root,frame))
     add_branch_btn = tk.CTkButton(frame, text="Add Bank Branch", command=lambda: add_bank_branch(root,frame))
@@ -902,6 +957,7 @@ def adminPage(root, frame):
     # Place the buttons on the screen
     sign_up_btn.pack(anchor=tk.CENTER, pady=10)
     update_details_btn.pack(anchor=tk.CENTER, pady=10)
+    add_account_btn.pack(anchor=tk.CENTER, pady=10)
     add_bank_btn.pack(anchor=tk.CENTER, pady=10)
     delete_bank_btn.pack(anchor=tk.CENTER, pady=10)
     add_branch_btn.pack(anchor=tk.CENTER, pady=10)

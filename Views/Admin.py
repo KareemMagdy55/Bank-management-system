@@ -51,7 +51,8 @@ class Admin(BankUser):
         params = (branchNum, bankCode)
         self.db.sendQueryParams(query, params)
 
-    def addAccount(self, accountType, accountNumber, balance, customerSSN, employeeID):
+    def addAccount(self, accountType, accountNumber, balance, customerSSN):
+        employeeID = self.ssn
         query = "INSERT INTO Account (AccountType, Number, Balance, CustomerSSN, EmployeeID) VALUES (?, ?, ?, ?, ?);"
         params = (accountType, accountNumber, balance, customerSSN, employeeID)
         self.db.sendQueryParams(query, params)
