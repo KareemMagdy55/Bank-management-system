@@ -19,16 +19,16 @@ class Customer(BankUser):
             print("Customer not found !")
             return False;
 
-    def requestLoan(self, loanType, loanTypeID, amount):
+    def requestLoan(self, loanTypeID, amount):
         query = "INSERT INTO dbo.Loan ( Balance, LoanTypeID, CustomerSSN,EmployeeSSN, LoanStatus, PaidBalance) VALUES ( ?, ?, ?,NULL, 'REQ', 0 );"
         params = ( amount, loanTypeID, self.ssn)
         self.db.sendQueryParams(query, params)
 
     def startLoan(self, loanNumber):
-        query = "UPDATE Loan SET LoanStatus = 'ACT'where id = ?;"
-        self.db.sendQueryParams(query, (loanNumber))
+        query = "UPDATE Loan SET LoanStatus = 'ACT'where id = ? AND LoanStatus = 'NACT';"
+        self.db.sendQueryParams(query, loanNumber)
 
 
-cus =  Customer("Kareem", "54", "123", "CIB")
-
-cus.startLoan('16')
+# cus =  Customer("Kareem", "54", "123", "CIB")
+#
+# cus.startLoan('16')
