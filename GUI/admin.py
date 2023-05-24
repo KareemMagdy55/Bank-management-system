@@ -680,10 +680,98 @@ def adminPage(root, frame):
         backButton = tk.CTkButton(frame, text="Back", command=lambda:adminPage(root, frame))
         backButton.pack(anchor=tk.CENTER, pady=10)
 
+    # Function to handle the 'Show list of employees' button click
+    def showEmployees(root, frame):
+        rows = adminObj.showEmployees()
+        frame.destroy()
+        frame = tk.CTkFrame(root)
+        frame.pack(expand=True)
+        # Add Header
+        showEmployees = tk.CTkLabel(frame, text="All Employees", font=("Arial", 30))
+        showEmployees.pack(anchor=tk.CENTER, pady=10)
+        rows.insert(0, ['Name', 'SSN', 'Password', 'Access Level', 'Bank Code', 'Branch Code'])
+        height = len(rows)
+        width = len(rows[0])
+        empFrame = tk.CTkScrollableFrame(frame, width=650)
+        empFrame.pack(anchor=tk.CENTER, pady=10)
+        for i in range(height):
+            for j in range(width):
+                b = tk.CTkLabel(empFrame, text=rows[i][j])
+                b.grid(row=i, column=j,padx=10, pady=10)
+        # Add Back Button
+        backButton = tk.CTkButton(frame, text="Back", command=lambda:adminPage(root, frame))
+        backButton.pack(anchor=tk.CENTER, pady=10)
+
     # Function to handle the 'Perform operations on loans' button click
     def perform_loan_operations():
-        emp.loanMenu()
-        messagebox.showinfo("Perform Loan Operations", "Perform loan operations button clicked")
+        def LoanOperations(root, frame):
+            frame.destroy()
+            frame = tk.CTkFrame(root)
+            frame.pack(expand=True)
+            # Add Header
+            loanOperations = tk.CTkLabel(frame, text="Loan Operations", font=("Arial", 30))
+            loanOperations.pack(anchor=tk.CENTER, pady=10)
+            # Add Buttons
+            showLoansButton = tk.CTkButton(frame, text="Show list of loans", command=lambda:show_loans(root, frame))
+            showLoansButton.pack(anchor=tk.CENTER, pady=10)
+            backButton = tk.CTkButton(frame, text="Back", command=lambda:adminPage(root, frame))
+            backButton.pack(anchor=tk.CENTER, pady=10)
+        def newLoan(root, frame):
+            frame.destroy()
+            frame = tk.CTkFrame(root)
+            frame.pack(expand=True)
+            # Add Header
+            newLoan = tk.CTkLabel(frame, text="New Loan", font=("Arial", 30))
+            newLoan.pack(anchor=tk.CENTER, pady=10)
+            # Add Labels and Entry Boxes
+            customerSSNLabel = tk.CTkLabel(frame, text="Customer SSN")
+            customerSSNLabel.grid(row=0, column=0, pady=2, padx=10)
+            customerSSNEntry = tk.CTkEntry(frame)
+            customerSSNEntry.grid(row=0, column=1, pady=2, padx=10)
+
+
+            
+            loanTypes_raw = adminObj.showLoansType()
+            loanTypes = []
+            for loan in loanTypes_raw:
+                loanTypes.append(loan[0])
+            
+            loanTypeLabel = tk.CTkLabel(frame, text="Loan Type")
+            loanTypeLabel.grid(row=1, column=0, pady=2, padx=10)
+            loanTypeMenu = tk.CTkOptionMenu(frame, values = loanTypes)
+            loanTypeMenu.grid(row=1, column=1, pady=2, padx=10)
+
+            balanceLabel = tk.CTkLabel(frame, text="Balance")
+            balanceLabel.grid(row=2, column=0, pady=2, padx=10)
+            balanceEntry = tk.CTkEntry(frame)
+            balanceEntry.grid(row=2, column=1, pady=2, padx=10)
+            # Add Button
+            def addLoan():
+                loanType = loanTypeMenu.get()
+                # Get the loan type ID
+                loanTypeID = loanTypes.index(loanType) + 1
+                balance = balanceEntry.get()
+                loanStatus = "REQ"
+                employeeSSN = adminObj.ssn
+                customerSSN = customerSSNEntry.get()
+                
+                adminObj.addLoan(loanTypeID, balance, loanStatus, employeeSSN, customerSSN)
+                messagebox.showinfo("New Loan", "Loan added successfully")
+                adminPage(root, frame)
+            addLoanButton = tk.CTkButton(frame, text="Add Loan", command=addLoan)
+            addLoanButton.pack(anchor=tk.CENTER, pady=10)
+            backButton = tk.CTkButton(frame, text="Back", command=lambda:LoanOperations(root, frame))
+            backButton.pack(anchor=tk.CENTER, pady=10)
+        frame.destroy()
+        frame = tk.CTkFrame(root)
+        frame.pack(expand=True)
+
+        newLoan = tk.CTkButton(frame, text="New Loan", command=lambda:newLoan(root, frame))
+        newLoan.pack(anchor=tk.CENTER, pady=10)
+        loanOperations = tk.CTkButton(frame, text="Update Loan", command=lambda:LoanOperations(root, frame))
+        loanOperations.pack(anchor=tk.CENTER, pady=10)
+        backButton = tk.CTkButton(frame, text="Back", command=lambda:adminPage(root, frame))
+        backButton.pack(anchor=tk.CENTER, pady=10)
 
     # Create and configure the buttons
     sign_up_btn = tk.CTkButton(frame, text="Sign up", command= lambda: sign_up(root,frame))
@@ -694,6 +782,7 @@ def adminPage(root, frame):
     delete_branch_btn = tk.CTkButton(frame, text="Delete Bank Branch", command=lambda: delete_bank_branch(root,frame))
     show_loans_btn = tk.CTkButton(frame, text="Show List of Loans", command=lambda: show_loans(root,frame))
     showCustomers_btn = tk.CTkButton(frame, text="Show List of Customers", command=lambda: showCustomers(root,frame))
+    showEmployees_btn = tk.CTkButton(frame, text="Show List of Employees", command=lambda: showEmployees(root,frame))
     perform_loan_operations_btn = tk.CTkButton(frame, text="Perform Operations on Loans", command=lambda: perform_loan_operations(root,frame))
 
     # Place the buttons on the screen
@@ -705,6 +794,7 @@ def adminPage(root, frame):
     delete_branch_btn.pack(anchor=tk.CENTER, pady=10)
     show_loans_btn.pack(anchor=tk.CENTER, pady=10)
     showCustomers_btn.pack(anchor=tk.CENTER, pady=10)
+    showEmployees_btn.pack(anchor=tk.CENTER, pady=10)
     perform_loan_operations_btn.pack(anchor=tk.CENTER, pady=10)
 
 

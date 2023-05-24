@@ -84,11 +84,11 @@ class Admin(BankUser):
                                     JOIN LoanType ON Loan.LoanTypeID = LoanType.LoanTypeID;''')
 
     def showLoansType(self):
-        self.db.sendQuery("SELECT LoanType FROM dbo.LoanType;")
+        return self.db.sendQuery("SELECT LoanType FROM dbo.LoanType;")
 
     def showCustomers(self):
         return self.db.sendQuery("SELECT * FROM dbo.Customer;")
 
     def showEmployees(self):
-        self.db.sendQuery("SELECT * FROM dbo.Employee;")
+        return self.db.sendQuery("SELECT * FROM dbo.Employee;")
 
