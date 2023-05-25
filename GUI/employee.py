@@ -57,6 +57,8 @@ def updateLoansPage(root, frame):
         loanEmpSSNLabel.grid(row=2, column=0, pady=2, padx=10)
         loanEmpSSNEntry = tk.CTkEntry(frame)
         loanEmpSSNEntry.grid(row=2, column=1, pady=2, padx=10)
+        if loanEmpSSN == None:
+            loanEmpSSN = empObj.ssn
         loanEmpSSNEntry.insert(0, loanEmpSSN)
         loanEmpSSNEntry.configure(state="disabled")
 
