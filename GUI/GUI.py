@@ -1,10 +1,11 @@
 import customtkinter as tk
-import GUI.employee as emp
-import GUI.admin
-import GUI.customer as cust
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import Report.report as report
+import GUI.employee as emp
+import GUI.admin as admin
+import GUI.customer as cust
+
 
 
 tk.set_appearance_mode("System")
