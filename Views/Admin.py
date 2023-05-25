@@ -93,3 +93,6 @@ class Admin(BankUser):
     def showEmployees(self):
         return self.db.sendQuery("SELECT * FROM dbo.Employee;")
 
+Admn = Admin("karson" , "123", "123")
+Admn.db.sendQuery("select * from Loan ")
+# Admn.updateLoan('18', 'NACT')

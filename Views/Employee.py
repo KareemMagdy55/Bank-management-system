@@ -8,7 +8,7 @@ class Employee(BankUser):
 
     def validateEmployee(self):
         c = self.db.cursor
-        query = "SELECT * FROM Employee WHERE SSN=? AND EmployeePassword=?;"
+        query = "SELECT * FROM Employee WHERE SSN=? AND EmployeePassword=? AND AccessLevel <> 10;"
         c.execute(query, (self.ssn, self.password))
         row = c.fetchone()
         if row is not None:
