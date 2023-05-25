@@ -46,6 +46,8 @@ def custDetails(root, frame):
 
     balanceLabel = tk.CTkLabel(frame, text="Total Balance: EGP")
     balanceLabel.grid(row=5, column=0)
+    if totalBalance == None:
+        totalBalance = 0
     balanceValue = tk.CTkLabel(frame, text=totalBalance)
     balanceValue.grid(row=5, column=1, pady=3, padx=10)
 
