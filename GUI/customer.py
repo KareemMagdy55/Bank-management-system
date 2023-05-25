@@ -15,8 +15,8 @@ def custDetails(root, frame):
 
     custRow = custObj.db.sendQuery("SELECT * FROM customer WHERE ssn = '" + custObj.ssn + "'")[0]
     name = custObj.name
-    address = custRow[0][2]
-    phone = custRow[0][3]
+    address = custRow[2]
+    phone = custRow[3]
     totalBalance = custObj.db.sendQuery("SELECT SUM(balance) FROM account WHERE CustomerSSN = '" + custObj.ssn + "'")[0][0]
 
 
